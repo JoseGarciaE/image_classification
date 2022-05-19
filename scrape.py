@@ -8,20 +8,25 @@ from selenium.webdriver.common.by import By
 import time
 
 
-if __name__ == '__main__':
-    
-    emotions = ['smiling', 'angry']
+def scrape_photos(queries, seconds):
 
-    for emotion in emotions:
+    print('Beginning Scrapping ...')
 
+    photo_path = './photos'
+    try:
+        shutil.rmtree(photo_path)    
+    except: pass
+    os.mkdir(photo_path)
+
+    for query in queries:
         ## suppress misc error messages
         # options = webdriver.ChromeOptions()
         # options.add_experimental_option('excludeSwitches', ['enable-logging'])
         # driver = webdriver.Chrome(options=options,executable_path='./drivers/chromedriver.exe')
-
         # data = requests.get('https://unsplash.com/s/photos/smile')
         # soup = BeautifulSoup(data.content, 'html.parser')
-        url = 'https://unsplash.com/s/photos/' + emotion
+
+        url = 'https://unsplash.com/s/photos/' + query
         driver = webdriver.Chrome(executable_path='./drivers/chromedriver.exe')
         driver.maximize_window()
         driver.get(url)
@@ -32,33 +37,45 @@ if __name__ == '__main__':
         button = div.find_element(By.TAG_NAME, value='button')
         button.click()
 
-        # scrolling thorugh images
-        for i in range(10):
+        # scrolling thorugh the website
+        duration = int(float(seconds) / .2)
+        for i in range(duration):
             time.sleep(.2)
             driver.execute_script("window.scrollBy(0, 450)")
-        
+
+        # finding each photo
         images = []
         divs = driver.find_elements(By.CLASS_NAME, value='ripi6')
         for div in divs:
             figures = div.find_elements(By.TAG_NAME, value='figure')
-            print(len(figures))
             for figure in figures:
                 image = figure.find_element(By.TAG_NAME, value='img')
                 images.append(image.get_attribute('src'))
 
-
-        # if directory already exists
-        path = os.path.join('./', emotion)
-        try:
-            shutil.rmtree(path)    
-        except: pass
-
+        path = os.path.join(photo_path, query)
         os.mkdir(path)
 
-        # saving each image
-        for index, image in enumerate(images):
+        # saving each photo
+        for i, image in enumerate(images):
             response = requests.get(image)
-            path = './'+ emotion +'/' + str(index) + '.png'
-            file = open(path, 'wb')
+            new_path = path +'/' + str(i) + '.png'
+            file = open(new_path, 'wb')
             file.write(response.content)
             file.close()
+        
+        print('Query Complete.')
+    
+    print('Scrapping Completed.')
+
+
+if __name__ == '__main__':
+
+    queries = ['excited', 'angry']
+
+    # function to scrape
+    scrape_photos(queries, seconds=3)
+
+
+    
+
+    
