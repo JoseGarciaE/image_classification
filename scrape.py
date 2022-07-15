@@ -67,13 +67,30 @@ def scrape_photos(queries, seconds):
     
     print('Scrapping Completed.')
 
+def even_queries():
+    smallest_folder = 100000
+    photo_path = './photos'
+    for folder in os.listdir(photo_path):
+        curr_folder = len(os.listdir(photo_path + '/' + folder))
+        if curr_folder < smallest_folder:
+            smallest_folder = curr_folder 
+
+    for folder in os.listdir(photo_path):
+        curr_folder = os.listdir(photo_path + '/' + folder)
+        while len(curr_folder) > smallest_folder:
+            os.remove(photo_path + '/' + folder + '/' + curr_folder.pop())
+        print(len(curr_folder))
+
 
 if __name__ == '__main__':
 
-    queries = ['excited', 'angry']
+    queries = ['green', 'blue']
 
-    # function to scrape
-    scrape_photos(queries, seconds=3)
+    #function to scrape
+    scrape_photos(queries, seconds=10)
+
+    # function to even out query results
+    even_queries()
 
 
     
