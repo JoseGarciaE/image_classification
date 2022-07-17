@@ -1,1 +1,1 @@
-# Facial_Classification
+# Image Classification
