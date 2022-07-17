@@ -13,9 +13,10 @@ def scrape_photos(queries, seconds):
     print('Beginning Scrapping ...')
 
     photo_path = './photos'
-    try:
-        shutil.rmtree(photo_path)    
-    except: pass
+    # try:
+    #     shutil.rmtree(photo_path)    
+    # except: pass
+    shutil.rmtree(photo_path)
     os.mkdir(photo_path)
 
     for query in queries:
@@ -84,10 +85,10 @@ def even_queries():
 
 if __name__ == '__main__':
 
-    queries = ['green', 'blue']
+    queries = ['red', 'green', 'blue', 'black', 'white']
 
     #function to scrape
-    scrape_photos(queries, seconds=10)
+    scrape_photos(queries, seconds=25)
 
     # function to even out query results
     even_queries()
